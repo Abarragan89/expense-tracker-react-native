@@ -1,17 +1,20 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
 import COLORS from "../globalStyles/colors";
 
-function ExpenseCard({ onPress }) {
+
+function ExpenseCard({ purchaseDate, purchaseName, purchasePrice, onPress }) {
+
 
     return (
         <Pressable onPress={onPress}>
             <View style={styles.root}>
                 <View>
-                    <Text style={styles.itemName}>A book</Text>
-                    <Text style={styles.purchaseDate}>2022-10-23</Text>
+                    <Text style={styles.itemName}>{purchaseName}</Text>
+                    <Text style={styles.purchaseDate}>{purchaseDate}</Text>
                 </View>
-                <Text style={styles.itemPrice}>14.99</Text>
+                <View style={styles.priceContainer}>
+                    <Text style={styles.itemPrice}>{purchasePrice}</Text>
+                </View>
             </View>
         </Pressable>
     )
@@ -38,11 +41,16 @@ const styles = StyleSheet.create({
     purchaseDate: {
         color: COLORS.offWhite
     },
+    priceContainer: {
+        
+    },
     itemPrice: {
         color: COLORS.primary,
         fontWeight: 'bold',
         backgroundColor: COLORS.offWhite,
         padding: 10,
-        borderRadius: 8
+        borderRadius: 8,
+        // this overflow hidden let the borderRadius appear on IOS
+        overflow: 'hidden'
     }
 })

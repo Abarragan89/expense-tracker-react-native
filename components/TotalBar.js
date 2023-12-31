@@ -1,11 +1,11 @@
 import { Text, View, StyleSheet } from "react-native";
 import COLORS from "../globalStyles/colors";
 
-function TotalBar() {
+function TotalBar({ text, amount }) {
     return (
         <View style={styles.root}>
-            <Text>Last 7 days</Text>
-            <Text style={styles.price}>$30.32</Text>
+            <Text>{text}</Text>
+            <Text style={styles.price}>${amount}</Text>
         </View>
     )
 }

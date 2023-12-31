@@ -12,11 +12,29 @@ import COLORS from './globalStyles/colors';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function StackNavigator() {
+function StackNavigatorRecent() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="RecentExpenses" component={RecentExpensesScreen} options={{
         title: 'Recent Expenses',
+        headerStyle: { backgroundColor: COLORS.secondary },
+        headerTintColor: COLORS.offWhite,
+      }} />
+      <Stack.Screen name="SinglePurchase" component={SinglePurchaseScreen} options={{
+        title: 'Edit Expense',
+        presentation: "modal",
+        headerStyle: { backgroundColor: COLORS.secondary },
+        headerTintColor: COLORS.offWhite
+      }} />
+    </Stack.Navigator>
+  )
+}
+
+function StackNavigatorAll() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="AllExpenses" component={AllExpensesScreen} options={{
+        title: 'All Expenses',
         headerStyle: { backgroundColor: COLORS.secondary },
         headerTintColor: COLORS.offWhite,
       }} />
@@ -45,19 +63,20 @@ export default function App() {
         }}>
           <Tab.Screen
             name="RecentHome"
-            component={StackNavigator}
+            component={StackNavigatorRecent}
             options={{
-              title: "Recent Expenses",
+              title: 'Recent',
               headerShown: false,
-              tabBarIcon: ({ color }) => <Ionicons name='hourglass' color={color} size={24} />
+              tabBarIcon: ({ color }) => <Ionicons name='hourglass' color={color} size={32} />
             }}
           />
           <Tab.Screen
-            name="AllExpenses"
-            component={AllExpensesScreen}
+            name="AllExpensesHome"
+            component={StackNavigatorAll}
             options={{
               title: "All Expenses",
-              tabBarIcon: ({ color }) => <Ionicons name='calendar' color={color} size={24} />
+              headerShown: false,
+              tabBarIcon: ({ color }) => <Ionicons name='calendar' color={color} size={32} />
             }}
           />
         </Tab.Navigator>
