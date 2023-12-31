@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         margin: 20,
+        marginBottom: 5,
         backgroundColor: COLORS.secondary,
         borderRadius: 8,
         padding: 10,
@@ -40,9 +41,6 @@ const styles = StyleSheet.create({
     },
     purchaseDate: {
         color: COLORS.offWhite
-    },
-    priceContainer: {
-        
     },
     itemPrice: {
         color: COLORS.primary,

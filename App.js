@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import RecentExpensesScreen from './screens/RecentExpensesScreen';
 import AllExpensesScreen from './screens/AllExpensesScreen';
 import SinglePurchaseScreen from './screens/SinglePurchaseScreen';
+import AddPurchase from './screens/AddPurchase';
 import COLORS from './globalStyles/colors';
 
 const Tab = createBottomTabNavigator();
@@ -26,6 +27,12 @@ function StackNavigatorRecent() {
         headerStyle: { backgroundColor: COLORS.secondary },
         headerTintColor: COLORS.offWhite
       }} />
+      <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
+        title: 'Add Expense',
+        presentation: "modal",
+        headerStyle: { backgroundColor: COLORS.secondary },
+        headerTintColor: COLORS.offWhite
+      }} />
     </Stack.Navigator>
   )
 }
@@ -40,6 +47,12 @@ function StackNavigatorAll() {
       }} />
       <Stack.Screen name="SinglePurchase" component={SinglePurchaseScreen} options={{
         title: 'Edit Expense',
+        presentation: "modal",
+        headerStyle: { backgroundColor: COLORS.secondary },
+        headerTintColor: COLORS.offWhite
+      }} />
+       <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
+        title: 'Add Expense',
         presentation: "modal",
         headerStyle: { backgroundColor: COLORS.secondary },
         headerTintColor: COLORS.offWhite

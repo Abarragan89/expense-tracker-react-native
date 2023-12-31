@@ -1,4 +1,6 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
+import { useLayoutEffect } from "react";
+import { Ionicons } from '@expo/vector-icons';
 import TotalBar from "../components/TotalBar";
 import data from "../data/purchases";
 import COLORS from "../globalStyles/colors";
@@ -6,8 +8,22 @@ import ExpenseCard from "../components/ExpenseCard";
 
 function RecentExpensesScreen({ navigation }) {
 
-    function renderFlatList({ item }) {
+    // set up header button
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => 
+                <Ionicons 
+                    name="add" 
+                    color={COLORS.offWhite} 
+                    size={32}
+                    onPress={() => {
+                        navigation.navigate('AddPurchase')
+                    }}
+                />
+        })
+    }, [navigation])
 
+    function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
             navigation.navigate('SinglePurchase', {
                 purchaseId: item.id
@@ -23,7 +39,6 @@ function RecentExpensesScreen({ navigation }) {
 
             />
         )
-
     }
 
     return (
