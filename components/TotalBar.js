@@ -1,11 +1,16 @@
 import { Text, View, StyleSheet } from "react-native";
 import COLORS from "../globalStyles/colors";
 
-function TotalBar({ text, amount }) {
+function TotalBar({ text, expenses }) {
+
+    const totalAmount = expenses.reduce((sum, expense) => {
+        return sum + expense.purchasePrice;
+    }, 0)
+
     return (
         <View style={styles.root}>
             <Text>{text}</Text>
-            <Text style={styles.price}>${amount}</Text>
+            <Text style={styles.price}>${totalAmount.toFixed(2)}</Text>
         </View>
     )
 }

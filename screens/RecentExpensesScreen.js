@@ -1,12 +1,26 @@
 import { View, StyleSheet, FlatList, Text } from "react-native";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux'
 import TotalBar from "../components/TotalBar";
-import data from "../data/purchases";
 import COLORS from "../globalStyles/colors";
+import { getDateMinusDays, getFormattedDate } from "./utils/date";
 import ExpenseCard from "../components/ExpenseCard";
 
 function RecentExpensesScreen({ navigation }) {
+
+    let data = useSelector((state) => state.purchases.purchases)
+
+    let filteredData;
+
+    useMemo(() => {
+        filteredData = data.filter((expense) => {
+            const today = new Date();
+            const date7DaysAgo = getDateMinusDays(today, 7);
+            const purchaseDate = new Date(expense.purchaseDate)
+            return purchaseDate > date7DaysAgo;
+        })
+    }, [data])
 
     // set up header button
     useLayoutEffect(() => {
@@ -25,14 +39,14 @@ function RecentExpensesScreen({ navigation }) {
 
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
-            navigation.navigate('SinglePurchase', {
+            navigation.navigate('EditPurchase', {
                 purchaseId: item.id
             })
         }
         return (
             <ExpenseCard 
                 purchaseId={item.id}
-                purchaseDate={item.purchaseDate.toLocaleString()}
+                purchaseDate={getFormattedDate(item.purchaseDate)}
                 purchaseName={item.purchaseName}
                 purchasePrice={item.purchasePrice}
                 onPress={handleSinglePurchaseView}
@@ -46,10 +60,10 @@ function RecentExpensesScreen({ navigation }) {
             <View style={styles.root}>
                 <TotalBar 
                     text="Last 7 days"
-                    amount={29.32} 
+                    expenses={data} 
                 />
                 <FlatList
-                    data={data}
+                    data={filteredData}
                     renderItem={renderFlatList}
                     keyExtractor={(itemData) => itemData.id}
                 />

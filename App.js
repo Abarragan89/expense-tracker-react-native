@@ -6,58 +6,41 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import RecentExpensesScreen from './screens/RecentExpensesScreen';
 import AllExpensesScreen from './screens/AllExpensesScreen';
-import SinglePurchaseScreen from './screens/SinglePurchaseScreen';
+import EditPurchaseScreen from './screens/EditPurchaseScreen';
 import AddPurchase from './screens/AddPurchase';
 import COLORS from './globalStyles/colors';
+import { store } from './redux/store'
+import { Provider } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function StackNavigatorRecent() {
+function TabNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="RecentExpenses" component={RecentExpensesScreen} options={{
-        title: 'Recent Expenses',
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite,
-      }} />
-      <Stack.Screen name="SinglePurchase" component={SinglePurchaseScreen} options={{
-        title: 'Edit Expense',
-        presentation: "modal",
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite
-      }} />
-      <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
-        title: 'Add Expense',
-        presentation: "modal",
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite
-      }} />
-    </Stack.Navigator>
-  )
-}
-
-function StackNavigatorAll() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="AllExpenses" component={AllExpensesScreen} options={{
-        title: 'All Expenses',
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite,
-      }} />
-      <Stack.Screen name="SinglePurchase" component={SinglePurchaseScreen} options={{
-        title: 'Edit Expense',
-        presentation: "modal",
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite
-      }} />
-       <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
-        title: 'Add Expense',
-        presentation: "modal",
-        headerStyle: { backgroundColor: COLORS.secondary },
-        headerTintColor: COLORS.offWhite
-      }} />
-    </Stack.Navigator>
+    <Tab.Navigator screenOptions={{
+      tabBarStyle: { backgroundColor: COLORS.secondary },
+      tabBarActiveTintColor: COLORS.orange,
+      tabBarInactiveTintColor: COLORS.gray,
+      headerStyle: { backgroundColor: COLORS.secondary },
+      headerTintColor: COLORS.offWhite,
+    }}>
+      <Tab.Screen
+        name="RecentHome"
+        component={RecentExpensesScreen}
+        options={{
+          title: 'Recent Expenses',
+          tabBarIcon: ({ color }) => <Ionicons name='hourglass' color={color} size={32} />,
+        }}
+      />
+      <Tab.Screen
+        name="AllExpensesHome"
+        component={AllExpensesScreen}
+        options={{
+          title: "All Expenses",
+          tabBarIcon: ({ color }) => <Ionicons name='calendar' color={color} size={32} />,
+        }}
+      />
+    </Tab.Navigator>
   )
 }
 
@@ -66,34 +49,28 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
+      <Provider store={store}>
       <NavigationContainer>
-        <Tab.Navigator screenOptions={{
-          tabBarStyle: { backgroundColor: COLORS.secondary },
-          // this overrides the active and inactive and needs to not be here
-          // tabBarLabelStyle: { color: COLORS.offWhite},
-          tabBarActiveTintColor: COLORS.orange,
-          tabBarInactiveTintColor: COLORS.gray,
-        }}>
-          <Tab.Screen
-            name="RecentHome"
-            component={StackNavigatorRecent}
-            options={{
-              title: 'Recent',
-              headerShown: false,
-              tabBarIcon: ({ color }) => <Ionicons name='hourglass' color={color} size={32} />
-            }}
-          />
-          <Tab.Screen
-            name="AllExpensesHome"
-            component={StackNavigatorAll}
-            options={{
-              title: "All Expenses",
-              headerShown: false,
-              tabBarIcon: ({ color }) => <Ionicons name='calendar' color={color} size={32} />
-            }}
-          />
-        </Tab.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen name="ViewExpenses" component={TabNavigator} options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name="EditPurchase" component={EditPurchaseScreen} options={{
+            title: 'Edit Expense',
+            presentation: "modal",
+            headerStyle: { backgroundColor: COLORS.secondary },
+            headerTintColor: COLORS.offWhite
+          }} />
+          <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
+            title: 'Add Expense',
+            presentation: "modal",
+            headerStyle: { backgroundColor: COLORS.secondary },
+            headerTintColor: COLORS.offWhite
+          }} />
+        </Stack.Navigator>
+
       </NavigationContainer>
+      </Provider>
     </>
 
   );

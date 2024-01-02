@@ -1,52 +1,64 @@
 
 import { View, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
 import { Ionicons } from '@expo/vector-icons';
 import PrimaryBtn from "../components/PrimaryBtn";
 import COLORS from "../globalStyles/colors";
-import data from "../data/purchases";
 import ExpenseCard from "../components/ExpenseCard";
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { removePurchase, updatePurchase } from "../redux/purchases";
 
-function SinglePurchaseScreen({ route }) {
+
+function EditPurchaseScreen({ route, navigation }) {
     const { purchaseId } = route.params
 
-    const [singlePurchase, setSinglePurchase] = useState(null)
-    useEffect(() => {
-        setSinglePurchase(data.filter((purchase) => purchase.id === purchaseId)[0])
-    }, [purchaseId, data])
+    // const singlePurchase = useSelector((state) => state.purchases.purchases
+    //     .find(purchase => purchase.id === purchaseId))
 
-    console.log('single purchase', singlePurchase)
+    const dispatch = useDispatch();
 
+
+    function cancelHandler() {
+        navigation.goBack();
+    }
+
+    function updateExpenseHandler() {
+        dispatch(updatePurchase({ id: purchaseId, purchaseName : 'updated!!'} ))
+        navigation.goBack();
+    }
+
+    function deleteHandler() {
+        navigation.goBack();
+        dispatch(removePurchase({ id: purchaseId }))
+    }
 
     return (
         <View style={styles.root}>
             <View style={styles.purchaseInfoContainer}>
-                {singlePurchase &&
-                    <ExpenseCard
+                    {/* <ExpenseCard
                         purchaseDate={singlePurchase.purchaseDate.toLocaleString()}
                         purchaseName={singlePurchase.purchaseName}
                         purchasePrice={singlePurchase.purchasePrice}
                         onPress={null}
-                    />
-                }
+                    /> */}
             </View>
             <View style={styles.btnContainer}>
                 <PrimaryBtn
                     text='Cancel'
-                    onPress={() => console.log('hi')}
+                    onPress={cancelHandler}
                 />
                 <PrimaryBtn
                     text='Update'
-                    onPress={() => console.log('hi')}
+                    onPress={updateExpenseHandler}
                     bgColor={COLORS.secondary}
                 />
             </View>
-            <Ionicons name='trash' style={styles.trashIcon} />
+            <Ionicons onPress={deleteHandler} name='trash' style={styles.trashIcon} />
         </View>
     )
 }
 
-export default SinglePurchaseScreen;
+export default EditPurchaseScreen;
 
 const styles = StyleSheet.create({
     root: {

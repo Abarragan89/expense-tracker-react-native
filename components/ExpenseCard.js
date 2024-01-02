@@ -13,7 +13,7 @@ function ExpenseCard({ purchaseDate, purchaseName, purchasePrice, onPress }) {
                     <Text style={styles.purchaseDate}>{purchaseDate}</Text>
                 </View>
                 <View style={styles.priceContainer}>
-                    <Text style={styles.itemPrice}>{purchasePrice}</Text>
+                    <Text style={styles.itemPrice}>${purchasePrice.toFixed(2)}</Text>
                 </View>
             </View>
         </Pressable>

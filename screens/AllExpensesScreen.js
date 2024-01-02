@@ -2,11 +2,14 @@ import { View, StyleSheet, FlatList } from "react-native";
 import { useLayoutEffect } from "react";
 import { Ionicons } from '@expo/vector-icons';
 import TotalBar from "../components/TotalBar";
-import data from "../data/purchases";
 import COLORS from "../globalStyles/colors";
 import ExpenseCard from "../components/ExpenseCard";
+import { getFormattedDate } from "./utils/date";
+import { useSelector } from 'react-redux'
 
 function AllExpensesScreen({ navigation }) {
+
+    const data = useSelector((state) => state.purchases.purchases)
 
     // set up header button
     useLayoutEffect(() => {
@@ -25,14 +28,14 @@ function AllExpensesScreen({ navigation }) {
 
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
-            navigation.navigate('SinglePurchase', {
+            navigation.navigate('EditPurchase', {
                 purchaseId: item.id
             })
         }
         return (
             <ExpenseCard 
                 purchaseId={item.id}
-                purchaseDate={item.purchaseDate.toLocaleString()}
+                purchaseDate={getFormattedDate(item.purchaseDate)}
                 purchaseName={item.purchaseName}
                 purchasePrice={item.purchasePrice}
                 onPress={handleSinglePurchaseView}
@@ -45,12 +48,12 @@ function AllExpensesScreen({ navigation }) {
             <View style={styles.root}>
                 <TotalBar 
                     text="Total"
-                    amount={229.32}  
+                    expenses={data}
                 />
                 <FlatList
                     data={data}
                     renderItem={renderFlatList}
-                    keyExtractor={(itemData) => itemData.id}
+                    keyExtractor={(item) => item.id}
                 />
             </View>
         </>
