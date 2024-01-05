@@ -91,9 +91,9 @@ const purchasesSlice = createSlice({
         },
 
         updatePurchase: (state, action) => {
-            const purchaseIndex = state.purchases.findIndex(purchase => purchase.id === action.payload.id)
+            const purchaseIndex = state.purchases.findIndex(purchase => purchase.id === action.payload.editedExpenseId)
             const updatableExpense = state.purchases[purchaseIndex];
-            const updateItem = { ...updatableExpense, ...action.payload};
+            const updateItem = { ...updatableExpense, ...action.payload.expenseData};
             state.purchases[purchaseIndex] = updateItem
         }
     }

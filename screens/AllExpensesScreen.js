@@ -1,6 +1,4 @@
 import { View, StyleSheet, FlatList } from "react-native";
-import { useLayoutEffect } from "react";
-import { Ionicons } from '@expo/vector-icons';
 import TotalBar from "../components/TotalBar";
 import COLORS from "../globalStyles/colors";
 import ExpenseCard from "../components/ExpenseCard";
@@ -11,24 +9,9 @@ function AllExpensesScreen({ navigation }) {
 
     const data = useSelector((state) => state.purchases.purchases)
 
-    // set up header button
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => 
-                <Ionicons 
-                    name="add" 
-                    color={COLORS.offWhite} 
-                    size={32}
-                    onPress={() => {
-                        navigation.navigate('AddPurchase')
-                    }}
-                />
-        })
-    }, [navigation])
-
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
-            navigation.navigate('EditPurchase', {
+            navigation.navigate('ManageExpense', {
                 purchaseId: item.id
             })
         }

@@ -22,24 +22,9 @@ function RecentExpensesScreen({ navigation }) {
         })
     }, [data])
 
-    // set up header button
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: () => 
-                <Ionicons 
-                    name="add" 
-                    color={COLORS.offWhite} 
-                    size={32}
-                    onPress={() => {
-                        navigation.navigate('AddPurchase')
-                    }}
-                />
-        })
-    }, [navigation])
-
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
-            navigation.navigate('EditPurchase', {
+            navigation.navigate('ManageExpense', {
                 purchaseId: item.id
             })
         }

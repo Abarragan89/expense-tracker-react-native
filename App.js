@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import RecentExpensesScreen from './screens/RecentExpensesScreen';
 import AllExpensesScreen from './screens/AllExpensesScreen';
-import EditPurchaseScreen from './screens/EditPurchaseScreen';
-import AddPurchase from './screens/AddPurchase';
+import ManageExpenseScreen from './screens/ManageExpenseScreen';
+import IconButton from './components/IconButton';
 import COLORS from './globalStyles/colors';
 import { store } from './redux/store'
 import { Provider } from 'react-redux';
@@ -17,13 +17,23 @@ const Stack = createStackNavigator();
 
 function TabNavigator() {
   return (
-    <Tab.Navigator screenOptions={{
+    <Tab.Navigator screenOptions={({ navigation})=> ({
       tabBarStyle: { backgroundColor: COLORS.secondary },
       tabBarActiveTintColor: COLORS.orange,
       tabBarInactiveTintColor: COLORS.gray,
       headerStyle: { backgroundColor: COLORS.secondary },
       headerTintColor: COLORS.offWhite,
-    }}>
+      headerRight: ({ tintColor }) => (
+        <IconButton 
+          icon="add"
+          size={24}
+          color={tintColor}
+          onPress={() => {
+            navigation.navigate('ManageExpense')
+          }}
+        />
+      )
+    })}>
       <Tab.Screen
         name="RecentHome"
         component={RecentExpensesScreen}
@@ -55,14 +65,7 @@ export default function App() {
           <Stack.Screen name="ViewExpenses" component={TabNavigator} options={{
             headerShown: false,
           }} />
-          <Stack.Screen name="EditPurchase" component={EditPurchaseScreen} options={{
-            title: 'Edit Expense',
-            presentation: "modal",
-            headerStyle: { backgroundColor: COLORS.secondary },
-            headerTintColor: COLORS.offWhite
-          }} />
-          <Stack.Screen name="AddPurchase" component={AddPurchase} options={{
-            title: 'Add Expense',
+          <Stack.Screen name="ManageExpense" component={ManageExpenseScreen} options={{
             presentation: "modal",
             headerStyle: { backgroundColor: COLORS.secondary },
             headerTintColor: COLORS.offWhite
