@@ -1,6 +1,5 @@
-import { View, StyleSheet, FlatList, Text } from "react-native";
-import { useLayoutEffect, useMemo } from "react";
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet, FlatList } from "react-native";
+import { useMemo } from "react";
 import { useSelector } from 'react-redux'
 import TotalBar from "../components/TotalBar";
 import COLORS from "../globalStyles/colors";
@@ -25,7 +24,7 @@ function RecentExpensesScreen({ navigation }) {
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
             navigation.navigate('ManageExpense', {
-                purchaseId: item.id
+                purchaseData: item
             })
         }
         return (

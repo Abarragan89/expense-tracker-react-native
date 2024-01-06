@@ -9,8 +9,9 @@ import { useLayoutEffect } from "react";
 
 
 function ManageExpenseScreen({ route, navigation }) {
-    const editedExpenseId = route.params?.purchaseId
-    const isEditing = !!editedExpenseId
+    const purchaseData = route.params?.purchaseData
+    const editedExpenseId = purchaseData?.id
+    const isEditing = !!purchaseData
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -27,31 +28,29 @@ function ManageExpenseScreen({ route, navigation }) {
 
     function confirmHandler(expenseData) {
         if (isEditing) {
-            dispatch(updatePurchase({ editedExpenseId, expenseData} ))
+            dispatch(updatePurchase({ editedExpenseId, expenseData }))
         } else {
             dispatch(addPurchase(expenseData))
         }
         navigation.goBack();
     }
 
-    console.log(editedExpenseId)
-
     function deleteHandler() {
         navigation.goBack();
-        dispatch(removePurchase({ id: purchaseId }))
+        dispatch(removePurchase({ id: editedExpenseId }))
     }
 
     return (
         <View style={styles.root}>
             <View style={styles.purchaseInfoContainer}>
-                <ExpenseForm 
+                <ExpenseForm
                     onCancel={cancelHandler}
-                    updateHandler={confirmHandler}
-                    isEditing={isEditing}
+                    confirmHandler={confirmHandler}
+                    purchaseData={purchaseData}
                 />
             </View>
             {isEditing &&
-            <Ionicons onPress={deleteHandler} name='trash' style={styles.trashIcon} />
+                <Ionicons onPress={deleteHandler} name='trash' style={styles.trashIcon} />
             }
         </View>
     )

@@ -80,8 +80,8 @@ const purchasesSlice = createSlice({
     },
     reducers: {
         addPurchase: (state, action) => {
-            console.log(action.payload)
-            const newPurchase = {...action.payload}
+            const id = new Date().toString() + Math.random().toString();
+            const newPurchase = {...action.payload, id: id}
             state.purchases.push(newPurchase)
         },
 

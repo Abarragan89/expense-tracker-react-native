@@ -12,7 +12,7 @@ function AllExpensesScreen({ navigation }) {
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
             navigation.navigate('ManageExpense', {
-                purchaseId: item.id
+                purchaseData: item
             })
         }
         return (

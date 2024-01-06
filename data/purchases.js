@@ -13,7 +13,7 @@ const data = []
 
 for (let i = 20; i <= 31; i++) {
     const purchaseId = i;
-    const purchaseDate = new Date(`2023-12-${i.toString().padStart(2, '0')}T04:53:29`);
+    const purchaseDate = new Date(`2023-12-${i.toString().padStart(2, '0')}`);
     const purchaseName = `product #${i}`
     const purchasePrice = Math.floor(Math.random() * 30)
 
