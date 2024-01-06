@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import ExpenseForm from "../components/ManageExpenses/ExpenseForm";
 import { removePurchase, updatePurchase, addPurchase } from "../redux/purchases";
 import { useLayoutEffect } from "react";
+import { storeExpense } from "./utils/http";
 
 
 function ManageExpenseScreen({ route, navigation }) {
@@ -26,11 +27,12 @@ function ManageExpenseScreen({ route, navigation }) {
         navigation.goBack();
     }
 
-    function confirmHandler(expenseData) {
+    async function confirmHandler(expenseData) {
         if (isEditing) {
             dispatch(updatePurchase({ editedExpenseId, expenseData }))
         } else {
-            dispatch(addPurchase(expenseData))
+            const id = await storeExpense(expenseData)
+            dispatch(addPurchase({...expenseData, id: id }))
         }
         navigation.goBack();
     }

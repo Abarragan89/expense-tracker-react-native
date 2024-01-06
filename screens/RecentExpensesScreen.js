@@ -1,25 +1,39 @@
 import { View, StyleSheet, FlatList } from "react-native";
-import { useMemo } from "react";
-import { useSelector } from 'react-redux'
+import { useMemo, useEffect, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import TotalBar from "../components/TotalBar";
 import COLORS from "../globalStyles/colors";
 import { getDateMinusDays, getFormattedDate } from "./utils/date";
 import ExpenseCard from "../components/ExpenseCard";
+import { fetchExpenses } from "./utils/http";
+import { setExpenses } from "../redux/purchases";
 
 function RecentExpensesScreen({ navigation }) {
 
+    const dispatch = useDispatch();
+
+    const [filteredData, setFilteredData] = useState([])
+
+    // Redux
     let data = useSelector((state) => state.purchases.purchases)
-
-    let filteredData;
-
+    
     useMemo(() => {
-        filteredData = data.filter((expense) => {
+        setFilteredData(data.filter((expense) => {
             const today = new Date();
             const date7DaysAgo = getDateMinusDays(today, 7);
             const purchaseDate = new Date(expense.purchaseDate)
             return purchaseDate > date7DaysAgo;
-        })
+        }))
     }, [data])
+
+    //fetching data from backend
+    useEffect(() => {
+        async function getExpenses() {
+            const expenses = await fetchExpenses();
+            dispatch(setExpenses(expenses))
+        }
+        getExpenses();
+    }, [])
 
     function renderFlatList({ item }) {
         function handleSinglePurchaseView() {
@@ -28,7 +42,7 @@ function RecentExpensesScreen({ navigation }) {
             })
         }
         return (
-            <ExpenseCard 
+            <ExpenseCard
                 purchaseId={item.id}
                 purchaseDate={getFormattedDate(item.purchaseDate)}
                 purchaseName={item.purchaseName}
@@ -42,9 +56,9 @@ function RecentExpensesScreen({ navigation }) {
     return (
         <>
             <View style={styles.root}>
-                <TotalBar 
+                <TotalBar
                     text="Last 7 days"
-                    expenses={data} 
+                    expenses={filteredData}
                 />
                 <FlatList
                     data={filteredData}
