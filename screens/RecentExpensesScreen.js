@@ -7,16 +7,20 @@ import { getDateMinusDays, getFormattedDate } from "./utils/date";
 import ExpenseCard from "../components/ExpenseCard";
 import { fetchExpenses } from "./utils/http";
 import { setExpenses } from "../redux/purchases";
+import LoadingOverLay from "../components/UI/LoadingOverlay";
+import ErrorOverLay from "../components/UI/ErrorOverlay";
 
 function RecentExpensesScreen({ navigation }) {
-
+    const [isFetching, setIsFetching] = useState(true);
     const dispatch = useDispatch();
+
+    const [error, setError] = useState();
 
     const [filteredData, setFilteredData] = useState([])
 
     // Redux
     let data = useSelector((state) => state.purchases.purchases)
-    
+
     useMemo(() => {
         setFilteredData(data.filter((expense) => {
             const today = new Date();
@@ -29,10 +33,18 @@ function RecentExpensesScreen({ navigation }) {
     //fetching data from backend
     useEffect(() => {
         async function getExpenses() {
-            const expenses = await fetchExpenses();
-            dispatch(setExpenses(expenses))
+            try {
+                const expenses = await fetchExpenses();
+                dispatch(setExpenses(expenses))
+            } catch(error) {
+                console.log(error)
+                setError('Could not fetch expenses!')
+            }
+            setIsFetching(false)
         }
-        getExpenses();
+        // fake loading time
+        getExpenses()
+        
     }, [])
 
     function renderFlatList({ item }) {
@@ -51,6 +63,18 @@ function RecentExpensesScreen({ navigation }) {
 
             />
         )
+    }
+
+    function errorHandler() {
+        setError(null)
+    }
+
+    if (error && !isFetching) {
+        return <ErrorOverLay message={error} onConfirm={errorHandler}/>
+    }
+    
+    if (isFetching) {
+        return <LoadingOverLay />
     }
 
     return (
@@ -75,6 +99,6 @@ export default RecentExpensesScreen;
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: COLORS.primary
+        backgroundColor: COLORS.primary,
     }
 })

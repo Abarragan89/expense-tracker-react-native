@@ -5,11 +5,16 @@ import COLORS from "../globalStyles/colors";
 import { useDispatch } from 'react-redux';
 import ExpenseForm from "../components/ManageExpenses/ExpenseForm";
 import { removePurchase, updatePurchase, addPurchase } from "../redux/purchases";
-import { useLayoutEffect } from "react";
-import { storeExpense } from "./utils/http";
-
+import { useLayoutEffect, useState } from "react";
+import { storeExpense, updateExpense, deleteExpense} from "./utils/http";
+import LoadingOverLay from "../components/UI/LoadingOverlay";
+import ErrorOverLay from "../components/UI/ErrorOverlay";
 
 function ManageExpenseScreen({ route, navigation }) {
+
+    const [isConfirming, setIsConfirming] = useState(false)
+    const [error, setError] = useState()
+
     const purchaseData = route.params?.purchaseData
     const editedExpenseId = purchaseData?.id
     const isEditing = !!purchaseData
@@ -28,18 +33,44 @@ function ManageExpenseScreen({ route, navigation }) {
     }
 
     async function confirmHandler(expenseData) {
+        // we don't have to set this back to false because  we goBack();
+        setIsConfirming(true)
         if (isEditing) {
-            dispatch(updatePurchase({ editedExpenseId, expenseData }))
+            try {
+                await updateExpense(editedExpenseId, expenseData)
+                dispatch(updatePurchase({ editedExpenseId, expenseData }))
+            } catch(error) {
+                setError('Failed to update expense. Please try again.')
+            }
         } else {
-            const id = await storeExpense(expenseData)
-            dispatch(addPurchase({...expenseData, id: id }))
+            try {
+                const id = await storeExpense(expenseData)
+                dispatch(addPurchase({...expenseData, id: id }))
+            } catch(error) {
+                setError('Failed to add expense. Please try again')
+            }
         }
         navigation.goBack();
     }
 
-    function deleteHandler() {
-        navigation.goBack();
-        dispatch(removePurchase({ id: editedExpenseId }))
+    async function deleteHandler() {
+        setIsConfirming(true)
+        try {
+            await deleteExpense(editedExpenseId)
+            dispatch(removePurchase({ id: editedExpenseId }))
+            navigation.goBack();
+        } catch(error) {
+            setError('Could not delete expense. Please try again.')
+            setIsConfirming(false)
+        }
+    }
+
+    if (isConfirming) {
+        return <LoadingOverLay />
+    }
+
+    if (error) {
+        return <ErrorOverLay message={error} onConfirm={cancelHandler}/>
     }
 
     return (
